@@ -70,11 +70,11 @@ router.post(
 
       jwt.sign(
         payload,
-        config.get("jwtToken"),
+        config.get("jwtSecretToken"),
         { expiresIn: 360000 },
-        (err, result) => {
+        (err, encoded) => {
           if (err) throw err;
-          res.json({ token: result });
+          res.json({ token: encoded });
         }
       );
       // res.send("User registered");
