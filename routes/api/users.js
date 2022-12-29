@@ -5,9 +5,9 @@ const { check, validationResult } = require("express-validator");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const User = require("../../models/User");
-const config = require("config");
 
 // @route   POST api/users
 // @desc    Register route
@@ -15,7 +15,7 @@ const config = require("config");
 router.post(
   "/",
   [
-    check("name", "Name is required").not().isEmpty(),
+    check("name", "Name is required").notEmpty(),
     check("email", "Please include a valid email").isEmail(),
     check(
       "password",
