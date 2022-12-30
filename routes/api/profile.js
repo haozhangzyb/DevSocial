@@ -1,11 +1,18 @@
-const express = require("express");
-const router = express.Router();
-const auth = require("../../middleware/auth");
-const { check, validationResult } = require("express-validator");
+// const express = require("express");
+// const router = express.Router();
+// const auth = require("../../middleware/auth");
+// const { check, validationResult } = require("express-validator");
 // const normalizeURL = require("normalize-url");
+import express from "express";
+const router = express.Router();
+import { check, validationResult } from "express-validator";
+import normalizeURL from "normalize-url";
 
-const Profile = require("../../models/Profile");
-const User = require("../../models/User");
+// const Profile = require("../../models/Profile");
+// const User = require("../../models/User");
+import auth from "../../middleware/auth.js";
+import Profile from "../../models/Profile.js";
+import User from "../../models/User.js";
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile
@@ -36,7 +43,7 @@ router.post(
   [
     auth,
     check("status", "Status is required").notEmpty(),
-    check("skill", "At least one skill is required").not().isEmpty(),
+    check("skills", "At least one skill is required").not().isEmpty(),
     check("website", "Invalid URL").optional().isURL(),
   ],
   async (req, res) => {
@@ -44,7 +51,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+    console.log(req.body);
     // deconstruct the request object
     const {
       skills,
@@ -99,4 +106,5 @@ router.post(
   }
 );
 
-module.exports = router;
+// module.exports = router;
+export default router;

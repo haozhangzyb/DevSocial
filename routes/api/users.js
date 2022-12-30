@@ -1,13 +1,21 @@
-const express = require("express");
+// const express = require("express");
+// const router = express.Router();
+// // https://express-validator.github.io/docs/custom-error-messages.html#field-level
+// const { check, validationResult } = require("express-validator");
+// const gravatar = require("gravatar");
+// const bcrypt = require("bcryptjs");
+// const jwt = require("jsonwebtoken");
+// const config = require("config");
+import express from "express";
 const router = express.Router();
-// https://express-validator.github.io/docs/custom-error-messages.html#field-level
-const { check, validationResult } = require("express-validator");
-const gravatar = require("gravatar");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const config = require("config");
+import { check, validationResult } from "express-validator";
+import gravatar from "gravatar";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import config from "config";
 
-const User = require("../../models/User");
+// const User = require("../../models/User");
+import User from "../../models/User.js";
 
 // @route   POST api/users
 // @desc    Register route
@@ -88,4 +96,5 @@ router.post(
 );
 
 // router.get("/", (req, res) => res.send("user api"));
-module.exports = router;
+// module.exports = router;
+export default router;

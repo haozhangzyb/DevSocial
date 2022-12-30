@@ -1,4 +1,6 @@
-const express = require("express");
+// const express = require("express");
+// const router = express.Router();
+import express from "express";
 const router = express.Router();
 
 // @route   GET api/posts
@@ -6,4 +8,5 @@ const router = express.Router();
 // @access  Public
 router.get("/", (req, res) => res.send("Post route"));
 
-module.exports = router;
+// module.exports = router;
+export default router;
