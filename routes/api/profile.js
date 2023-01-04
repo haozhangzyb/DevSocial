@@ -30,7 +30,7 @@ router.get("/me", auth, async (req, res) => {
 
     return res.json(profile);
   } catch (err) {
-    console.log(err.msg);
+    console.error(err.message);
     return res.status(500).send("Server error");
   }
 });
@@ -51,7 +51,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(req.body);
+
     // deconstruct the request object
     const {
       skills,
@@ -70,6 +70,7 @@ router.post(
       skills: Array.isArray(skills)
         ? skills
         : skills.split(",").map((skill) => skill.trim()),
+      // date: Date.now(),
       ...rest,
     };
 
@@ -90,7 +91,7 @@ router.post(
     profileFields.social = socialFields;
 
     try {
-      // Using upsert option (creates new doc if no match is found):
+      // Using upsert option (creates new doc if no match is found),
       // set the new option to true to return the document after update was applied.
       // set fields to default value if not provided
       let profile = await Profile.findOneAndUpdate(
@@ -100,11 +101,52 @@ router.post(
       );
       return res.send(profile);
     } catch (err) {
-      console.log(err.msg);
+      console.error(err.message);
       return res.status(500).send("server error");
     }
   }
 );
+
+// @route   GET api/profile
+// @desc    Get all profiles
+// @access  Public
+router.get("/", async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate("user", [
+      "name",
+      "avatar",
+    ]);
+    return res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by user ID
+// @access  Public
+router.get("/user/:user_id", async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.user_id,
+    }).populate("user", ["name", "avatar"]);
+
+    if (!profile)
+      return res.status(400).json({ msg: "No profile for this user" });
+
+    return res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    // when user_id param is not a valid ObjectID, we still want to return back this message
+    if (err.kind == "ObjectId") {
+      return res
+        .status(400)
+        .json({ msg: "No profile for this user(invalid user_id)" });
+    }
+    res.status(500).send("Server error");
+  }
+});
 
 // module.exports = router;
 export default router;
