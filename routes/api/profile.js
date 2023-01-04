@@ -3,7 +3,7 @@
 // const auth = require("../../middleware/auth");
 // const { check, validationResult } = require("express-validator");
 // const normalizeURL = require("normalize-url");
-import express from "express";
+import express, { json } from "express";
 const router = express.Router();
 import { check, validationResult } from "express-validator";
 import normalizeURL from "normalize-url";
@@ -153,18 +153,59 @@ router.get("/user/:user_id", async (req, res) => {
 // @access  Private
 router.delete("/", auth, async (req, res) => {
   try {
-    // TODO: remove user posts
+    await Promise.all([
+      // TODO: remove user posts
 
-    // Remove profile
-    await Profile.findOneAndDelete({ user: req.user.id });
-    // Remove user
-    await User.findByIdAndDelete(req.user.id);
+      // Remove profile
+      await Profile.findOneAndDelete({ user: req.user.id }),
+      // Remove user
+      await User.findByIdAndDelete(req.user.id),
+    ]);
+
     return res.json({ msg: "User deleted" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
   }
 });
+
+// @route   PUT api/profile/experience
+// @desc    Add profile experience
+// @access  Private
+router.put(
+  "/experience",
+  [
+    auth,
+    [
+      check("title").notEmpty().withMessage("Title is required"),
+      check("company").notEmpty().withMessage("Company is required"),
+      check("from")
+        .notEmpty()
+        .custom((value, { req }) =>
+          req.body.to ? value < req.body.to : true
+        )
+        .withMessage(
+          "Start Date is required and needs to be from the past"
+        ),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      profile.experience.unshift(req.body);
+      await profile.save();
+
+      return res.json(profile);
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).json("Server Error");
+    }
+  }
+);
 
 // module.exports = router;
 export default router;
