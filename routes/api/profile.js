@@ -1,15 +1,8 @@
-// const express = require("express");
-// const router = express.Router();
-// const auth = require("../../middleware/auth");
-// const { check, validationResult } = require("express-validator");
-// const normalizeURL = require("normalize-url");
 import express, { json } from "express";
 const router = express.Router();
 import { check, validationResult } from "express-validator";
 import normalizeURL from "normalize-url";
 
-// const Profile = require("../../models/Profile");
-// const User = require("../../models/User");
 import auth from "../../middleware/auth.js";
 import Profile from "../../models/Profile.js";
 import User from "../../models/User.js";
@@ -207,5 +200,22 @@ router.put(
   }
 );
 
-// module.exports = router;
+// @route   DELETE api/profile/experience/:exp_id
+// @desc    Delete experience from profile
+// @access  Private
+router.delete("/experience/:exp_id", auth, async (req, res) => {
+  try {
+    const foundProfile = await Profile.findOne({ user: req.user.id });
+    foundProfile.experience = foundProfile.experience.filter(
+      (exp) => exp._id.toString() != req.params.exp_id
+    );
+    await foundProfile.save();
+
+    return res.status(200).json(foundProfile);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json("server error");
+  }
+});
+
 export default router;

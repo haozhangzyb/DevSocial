@@ -1,8 +1,6 @@
-// const express = require("express");
-// const connectDB = require("./config/db");
 import express from "express";
-import connectDB from "./config/db.js";
 
+import connectDB from "./config/db.js";
 import usersRoute from "./routes/api/users.js";
 import authRoute from "./routes/api/auth.js";
 import profileRoute from "./routes/api/profile.js";
