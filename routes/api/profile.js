@@ -218,4 +218,62 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
   }
 });
 
+// @route   PUT api/profile/education
+// @desc    Add profile education
+// @access  Private
+router.put(
+  "/education",
+  [
+    auth,
+    [
+      check("school").notEmpty().withMessage("School is required"),
+      check("degree").notEmpty().withMessage("degree is required"),
+      check("fieldofstudy")
+        .notEmpty()
+        .withMessage("Field of study is required"),
+      check("from")
+        .notEmpty()
+        .custom((value, { req }) =>
+          req.body.to ? value < req.body.to : true
+        )
+        .withMessage(
+          "Start Date is required and needs to be from the past"
+        ),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      profile.education.unshift(req.body);
+      await profile.save();
+
+      return res.json(profile);
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).json("Server Error");
+    }
+  }
+);
+
+// @route   DELETE api/profile/education/:edu_id
+// @desc    Delete education from profile
+// @access  Private
+router.delete("/education/:edu_id", auth, async (req, res) => {
+  try {
+    const foundProfile = await Profile.findOne({ user: req.user.id });
+    foundProfile.education = foundProfile.education.filter(
+      (edu) => edu._id.toString() != req.params.edu_id
+    );
+    await foundProfile.save();
+
+    return res.status(200).json(foundProfile);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json("server error");
+  }
+});
 export default router;
