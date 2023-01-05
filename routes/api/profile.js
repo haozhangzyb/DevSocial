@@ -8,6 +8,7 @@ import axios from "axios";
 import auth from "../../middleware/auth.js";
 import Profile from "../../models/Profile.js";
 import User from "../../models/User.js";
+import Post from "../../models/Post.js";
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile
@@ -149,8 +150,8 @@ router.get("/user/:user_id", async (req, res) => {
 router.delete("/", auth, async (req, res) => {
   try {
     await Promise.all([
-      // @TODO: remove user posts
-
+      // remove user posts
+      await Post.deleteMany({ user: req.user.id }),
       // Remove profile
       await Profile.findOneAndDelete({ user: req.user.id }),
       // Remove user
