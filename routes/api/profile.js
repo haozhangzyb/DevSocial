@@ -196,7 +196,7 @@ router.put(
 
       return res.json(profile);
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
       return res.status(500).json("Server Error");
     }
   }
@@ -215,7 +215,7 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
 
     return res.status(200).json(foundProfile);
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
     return res.status(500).json("server error");
   }
 });
@@ -255,7 +255,7 @@ router.put(
 
       return res.json(profile);
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
       return res.status(500).json("Server Error");
     }
   }
@@ -274,7 +274,7 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 
     return res.status(200).json(foundProfile);
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
     return res.status(500).json("server error");
   }
 });
