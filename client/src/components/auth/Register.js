@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,12 +16,25 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       console.log("password do not match");
     } else {
-      console.log(formData);
+      // try {
+      //   const config = {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   };
+      //   const body = JSON.stringify({ name, email, password });
+      //   const res = await axios.post("/api/users", body, config);
+
+      //   console.log(res);
+      // } catch (error) {
+      //   console.error(error);
+      // }
+      console.log("success");
     }
   };
 
@@ -83,7 +98,8 @@ const Register = () => {
         />
       </form>
       <p className='my-1'>
-        Already have an account? <a href='login.html'>Sign In</a>
+        Already have an account?
+        <Link to='/login'>Log In</Link>
       </p>
     </section>
   );
