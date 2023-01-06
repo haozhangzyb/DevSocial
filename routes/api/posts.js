@@ -143,4 +143,82 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
   }
 });
 
+// @route   POST api/posts/comment/:post_id
+// @desc    Comment a post
+// @access  Private
+router.post(
+  "/comment/:post_id",
+  [
+    auth,
+    check("text").notEmpty().withMessage("Comments text is required"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const foundPost = await Post.findById(req.params.post_id);
+      if (!foundPost) {
+        return res.status(400).json({ msg: "post not found" });
+      }
+
+      const userData = await User.findById(req.user.id).select(
+        "-password"
+      );
+
+      foundPost.comments.unshift({
+        user: req.user.id,
+        text: req.body.text,
+        name: userData.name,
+        avatar: userData.avatar,
+      });
+
+      await foundPost.save();
+
+      return res.json(foundPost.comments);
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).json("server error");
+    }
+  }
+);
+
+// @route   DELETE api/posts/comment/:post_id/:comment_id
+// @desc    Delete comment
+// @access  Private
+router.delete("/comment/:post_id/:comment_id", auth, async (req, res) => {
+  try {
+    const foundPost = await Post.findById(req.params.post_id);
+    if (!foundPost) {
+      return res.status(400).json({ msg: "post not found" });
+    }
+
+    // Pull out comment
+    const comment = foundPost.comments.find(
+      (comment) => comment.id === req.params.comment_id
+    );
+    // Make sure comment exists
+    if (!comment) {
+      return res.status(404).json({ msg: "Comment does not exist" });
+    }
+    // Check user
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "User not authorized" });
+    }
+
+    foundPost.comments = foundPost.comments.filter(
+      (comment) => comment.id.toString() !== req.params.comment_id
+    );
+
+    await foundPost.save();
+
+    return res.json(foundPost.comments);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json("server error");
+  }
+});
+
 export default router;
