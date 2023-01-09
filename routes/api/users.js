@@ -82,7 +82,7 @@ router.post(
         { expiresIn: 360000 },
         (err, encoded) => {
           if (err) throw err;
-          res.json({ token: encoded });
+          return res.json({ token: encoded });
         }
       );
       // res.send("User registered");
