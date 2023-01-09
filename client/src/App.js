@@ -33,6 +33,7 @@ const App = () => {
           <Route exact path='/' element={<Landing />} />
           <Route path='register' element={<Register />} />
           <Route path='login' element={<Login />} />
+          {/* <Route path='dashboard' element={<Dashboard />} /> */}
         </Routes>
       </Router>
     </Provider>

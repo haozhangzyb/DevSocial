@@ -15,7 +15,7 @@ Alert.propTypes = { alerts: PropTypes.array.isRequired };
 
 const mapStateToProps = (state) => ({
   // state contains all redux states of combineReducers
-  alerts: state.alert,
+  alerts: state.alertReducers,
 });
 
 export default connect(mapStateToProps)(Alert);
