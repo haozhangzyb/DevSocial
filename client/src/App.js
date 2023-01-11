@@ -15,6 +15,9 @@ import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 import { LOGOUT } from "./actions/types";
 
+// component
+import Dashboard from "./components/dashboard/Dashboard";
+
 const App = () => {
   useEffect(() => {
     // check for token in LS when app first runs
@@ -41,7 +44,7 @@ const App = () => {
           <Route exact path='/' element={<Landing />} />
           <Route path='register' element={<Register />} />
           <Route path='login' element={<Login />} />
-          {/* <Route path='dashboard' element={<Dashboard />} /> */}
+          <Route path='dashboard' element={<Dashboard />} />
         </Routes>
       </Router>
     </Provider>

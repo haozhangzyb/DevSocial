@@ -1,18 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
 
 import { logout } from "../../actions/auth";
 
-const Navbar = ({ isAuthenticated, logout }) => {
+const Navbar = () => {
+  const isAuthenticated = useSelector(
+    (state) => state.authReducer.isAuthenticated
+  );
+
+  const dispatch = useDispatch();
+
   const authLinks = (
     <ul>
       <li>
         <Link to='/profiles'>Profiles</Link>
       </li>
       <li>
-        <a onClick={logout} href='#!'>
+        <a onClick={() => logout()(dispatch)} href='/'>
           <i className='fas fa-sign-out-alt' />{" "}
           <span className='hide-sm'>Logout</span>
         </a>
@@ -37,22 +42,13 @@ const Navbar = ({ isAuthenticated, logout }) => {
   return (
     <nav className='navbar bg-dark'>
       <h1>
-        <a href='index.html'>
+        <Link to='/'>
           <i className='fas fa-code'></i> DevSocial
-        </a>
+        </Link>
       </h1>
       {isAuthenticated ? authLinks : guestLinks}
     </nav>
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.authReducer.isAuthenticated,
-  logout: PropTypes.func.isRequired,
-});
-
-Navbar.prototypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-};
-
-export default connect(mapStateToProps, { logout })(Navbar);
+export default Navbar;
