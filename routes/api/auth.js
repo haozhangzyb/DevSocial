@@ -1,9 +1,3 @@
-// const express = require("express");
-// const router = express.Router();
-// const jwt = require("jsonwebtoken");
-// const { check, validationResult } = require("express-validator");
-// const bcrypt = require("bcryptjs");
-// const config = require("config");
 import express from "express";
 const router = express.Router();
 import jwt from "jsonwebtoken";
@@ -11,8 +5,6 @@ import { check, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import config from "config";
 
-// const User = require("../../models/User");
-// const auth = require("../../middleware/auth");
 import User from "../../models/User.js";
 import auth from "../../middleware/auth.js";
 
@@ -84,10 +76,7 @@ router.post(
       console.log(err.message);
       res.status(500).send("Server error");
     }
-    // console.log(req.body);
-    // console.log("user posting");
   }
 );
 
-// module.exports = router;
 export default router;

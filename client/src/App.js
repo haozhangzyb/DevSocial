@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "./App.css";
+// component
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Alert from "./components/layout/Alert";
+// import Dashboard from "./components/dashboard/Dashboard";
 
 // Redux
 import { Provider } from "react-redux";
@@ -14,9 +16,6 @@ import store from "./store";
 import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 import { LOGOUT } from "./actions/types";
-
-// component
-import Dashboard from "./components/dashboard/Dashboard";
 
 const App = () => {
   useEffect(() => {
@@ -44,7 +43,7 @@ const App = () => {
           <Route exact path='/' element={<Landing />} />
           <Route path='register' element={<Register />} />
           <Route path='login' element={<Login />} />
-          <Route path='dashboard' element={<Dashboard />} />
+          {/* <Route path='dashboard' element={<Dashboard />} /> */}
         </Routes>
       </Router>
     </Provider>
