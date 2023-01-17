@@ -1,18 +1,19 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { Route, Navigate } from "react-router-dom";
+import Spinner from "../layout/Spinner";
 
-export const PrivateRoute = (props) => {
-  return <div>PrivateRoute</div>;
+export const PrivateRoute = ({ component: Component }) => {
+  const isAuthenticated = useSelector(
+    (state) => state.authReducer.isAuthenticated
+  );
+  const isLoading = useSelector((state) => state.authReducer.isLoading);
+
+  if (isLoading) return <Spinner />;
+  if (isAuthenticated) return <Component />;
+
+  return <Navigate to='/login' />;
 };
 
-PrivateRoute.propTypes = {
-  second: PropTypes.third,
-};
-
-const mapStateToProps = (state) => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);
+export default PrivateRoute;
